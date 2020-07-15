@@ -13,7 +13,7 @@ Machine Learning algorithm to predict Faceit ongoing/upcoming matches.
   � | �
   ------------ | -------------
   ⏳ **Current Phase**| Parsing and preparing database
-  📝**Total Matches Parsed** | ~2500
+  📝**Total Matches Parsed** | ~5000
   🧭 **Parsing speed** | 1.7 s/match
  
  ### Features:
