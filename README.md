@@ -28,3 +28,13 @@ Machine Learning algorithm to predict Faceit ongoing/upcoming matches.
  - [x] Database communication
  - [ ] Multiprocessing
  - [ ] Parsing several hubs at once 
+
+## Notebook
+
+### Phase 1
+
+- 10000 matches (8000 train and 2000 test)
+- Simple parsing logic with ~240 seconds per 100 matches.
+- Each neuros is assigned to following key:
+- - Average K/D Ratio
+- -
