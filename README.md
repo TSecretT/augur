@@ -13,7 +13,7 @@ Machine Learning algorithm to predict Faceit ongoing/upcoming matches.
   � | �
   ------------ | -------------
   ⏳ **Current Phase**| Parsing and preparing database
-  📝**Total Matches Parsed** | ~5000
+  📝**Total Matches Parsed** | ~64000
   🧭 **Parsing speed** | 1.7 s/match
  
  ### Features:
@@ -26,8 +26,9 @@ Machine Learning algorithm to predict Faceit ongoing/upcoming matches.
  - [x] Match parsing
  - [x] Match sorting for future use
  - [x] Database communication
- - [ ] Multiprocessing
+ - [x] Multiprocessing
  - [ ] Parsing several hubs at once 
+ - [ ] Bypass Faceit Rate Limit 
 
 ## Notebook
 
@@ -37,4 +38,6 @@ Machine Learning algorithm to predict Faceit ongoing/upcoming matches.
 - Simple parsing logic with ~240 seconds per 100 matches.
 - Each neuros is assigned to following key:
 - - Average K/D Ratio
-- -
+- - ...
+
+10000 matches with only 16 inputs and 1 dense layers is not enough, after some tweaking the final prediction rate was **56%**
