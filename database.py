@@ -1,0 +1,39 @@
+import json
+import time
+
+class Database:
+    def __init__(self, filename):
+        self.filename = filename
+    
+    def get(self):
+        with open(self.filename) as f:
+            data = json.load(f)
+        return data
+
+    def save(self, data: object):
+        with open(self.filename, 'w') as json_file:
+            json.dump(data, json_file, indent=4)
+
+    def set_one(self, key, obj):
+        data = self.get()
+        data[key] = obj
+        self.save(data)
+
+    def set_many(self, keys: list, objs: list) -> None:
+        start = time.time()
+        data = self.get()
+        for key, obj in zip(keys, objs):
+            data[key] = obj
+        self.save(data)
+        print(f"DB saved in {round(time.time()-start, 4)} seconds")
+    
+    def find(self, key: str) -> object:
+        data = self.get()
+        if key in data:
+            return data[key]
+
+    def len(self) -> int:
+        return len(self.get())
+
+    def clear(self) -> None:
+        self.save({})
