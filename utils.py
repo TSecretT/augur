@@ -61,3 +61,16 @@ def predict(data: object, MAP:str) -> str:
 def getScoreDifference(match: object) -> int:
     score = [int(score.strip()) for score in match['score'].split('/')]
     return abs(score[0] - score[1])
+
+# Clean match data
+def stripMatch(match: object) -> object:
+    for key in match.copy():
+        if key in constants.KEYS_TO_KEEP:
+            if key == 'teams' and 'id' in match[key]['faction1']:
+                for team in match[key]:
+                    match[key][team] = [player['id'] for player in match[key][team]['roster']]
+            elif key == 'id':
+                match['_id'] = match[key]
+        else:
+            del match[key]
+    return match

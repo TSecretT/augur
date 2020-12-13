@@ -49,7 +49,7 @@ def getMatches(limit=100, region="EU", offset=0, hub=False, hub_id=None, page=0)
 def getLiveMatches() -> list:
     live_matches = []
     offset = 0
-    while offset < 1000:
+    while offset < 100:
         matches = getMatches(offset=offset)
         if not matches: return live_matches
         for match in matches:

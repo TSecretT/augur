@@ -1,5 +1,7 @@
 import json
 import time
+import pymongo
+import config 
 
 class Database:
     def __init__(self, filename):
@@ -50,3 +52,9 @@ class Database:
 
     def clear(self) -> None:
         self.save({})
+
+class Mongo:    
+    def __init__(self):
+        client = pymongo.MongoClient(config.MONGODB_URL)
+        db = client["faugur"]
+        self.db = db["matches"]

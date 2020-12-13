@@ -85,6 +85,11 @@ AVERAGE_ALLOWED = [
     "Kills", "Deaths", "Assists", "HS", "K/D", "K/R", 
 ]
 
+KEYS_TO_KEEP = [
+    "id", "state", "status", "teams", "voting", "results", "createdAt", "finishedAt",
+    "prediction", "data", "parsing_time", "score", "prediction_correct", "checking_time"
+]
+
 DEFAULT_FROM = "1970-01-01T01:00:00+0000"
 DEFAULT_TO = "2020-12-11T21:20:28+0000"
 TIE_SCORE_DIFFERENCE = 4

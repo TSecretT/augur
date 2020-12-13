@@ -13,7 +13,8 @@ lg.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lg.INFO
 
 proxies = []
 
-db = database.Database('db.json')
+# db = database.Database('db.json')
+db = database.Mongo().db
 
 def scanMatch(match):
     start_time = time.time()
@@ -48,6 +49,7 @@ def scanMatch(match):
     match['data'] = data
     match['parsed_at'] = time.time()
     match['parsing_time'] = round(time.time() - start_time, 2)
+    match = stripMatch(match)
     return match
 
 def parse():
@@ -61,11 +63,14 @@ def parse():
         matches = live_matches[offset-config.MATCH_PARSE_OFFSET:offset]
         with Pool(8) as p:
             matches = p.map(scanMatch, matches)
-            keys = [match['id'] for match in matches]
-            db.set_many(keys, matches)
-    
+        db_start_time = time.time()
+        ids = [{'_id': match['id']} for match in matches]
+        saved_matches = db.find({"$or": ids})
+        saved_matches = [match['id'] for match in saved_matches]
+        matches = [match for match in matches if match['id'] not in saved_matches]
+        db.insert_many(matches)
     time_took = round(time.time() - start_time, 2)
-    print(f"Finished scan of {len(live_matches)} matches in {time_took} [{round(time_took / len(live_matches), 2)} s/match]")
+    print(f"Finished scan of {len(live_matches)} matches in {time_took}, saved in {round(time.time() - db_start_time, 2)} [{round(time_took / len(live_matches), 2)} s/match]")
 
 def check():
     lg.info("Checking matches...")
@@ -84,6 +89,11 @@ def check():
         match['checking_time'] = round(time.time() - start_time, 2)
         db.set_one(match['id'], match)
         lg.info(f"[{i+1}/{len(unchecked_matches)}] Match {match['id']} saved to database")
+
+
+def databaza():
+    mydict = { "_id": "1231", "name": "John", "address": "Highway 37" }
+    x = db.insert_one(mydict)
 
 def main():
     while True:
