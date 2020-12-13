@@ -5,10 +5,13 @@ class Database:
     def __init__(self, filename):
         self.filename = filename
     
-    def get(self):
+    def get(self, as_list=False):
         with open(self.filename) as f:
             data = json.load(f)
-        return data
+        if as_list:
+            return [data[match_id] for match_id in data]
+        else:
+            return data
 
     def save(self, data: object):
         with open(self.filename, 'w') as json_file:

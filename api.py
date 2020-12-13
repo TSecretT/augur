@@ -70,6 +70,7 @@ def getHubMatches(page_start=0, page=10):
 
 # Get match details
 def getMatchDetails(id: str) -> object:
+    print("Getting match details of ", id)
     return get(f"https://api.faceit.com/match/v2/match/{id}")['payload']
 
 # Returns list of match objects within time period 
