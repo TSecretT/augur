@@ -7,22 +7,26 @@ import constants
 proxies = []
 
 def get(url, data=None, params=None, proxies=None, headers=None, hit=1):
-    res = requests.get(url, params=params, proxies=proxies, headers=headers)
-    
-    if res.status_code == 200:
-        return res.json()
-    elif res.status_code == 429:
-        print("Going too fast, switching proxy")
-        removeProxy(proxies)
-        proxy = getProxy(proxies)
-        print(f"Switched to {proxy['https']}")
-#         print("Going too fase, sleeping for", hit * 5)
-#         time.sleep(hit * 5)
+    try:
+        res = requests.get(url, params=params, proxies=proxies, headers=headers)
+        if res.status_code == 200:
+            return res.json()
+        elif res.status_code == 429:
+            print("Going too fast, switching proxy")
+            removeProxy(proxies)
+            proxy = getProxy(proxies)
+            print(f"Switched to {proxy['https']}")
+    #         print("Going too fase, sleeping for", hit * 5)
+    #         time.sleep(hit * 5)
+            return get(url, data=data, params=params, proxies=proxies, hit=hit+1)
+        elif res.status_code == 500:
+            print(500, res.json())
+        else:
+            print(res.status_code)
+    except requests.exceptions.ConnectionError:
+        print("Max tries reached, sleeping for ", hit * 60)
+        time.sleep(hit * 60)
         return get(url, data=data, params=params, proxies=proxies, hit=hit+1)
-    elif res.status_code == 500:
-        print(500, res.json())
-    else:
-        print(res.status_code)
 
 def getMatches(limit=100, region="EU", offset=0, hub=False, hub_id=None, page=0):
     if(hub and hub_id):
