@@ -95,3 +95,18 @@ def getPlayerMatchesStats(id: str, page=0, size=100) -> list:
         "size": size,
     }
     return get(f"https://api.faceit.com/stats/v1/stats/time/users/{id}/games/csgo", params=params)
+
+# Returns "faction1" or "faction2" or None if no result
+def getMatchWinner(id: str):
+    match = getMatchDetails(id)
+    if match['status'] == "FINISHED":
+        match_stats = getMatchStats(id)
+        match['score'] = match_stats['i18']
+        return match, match['results'][0]['winner']
+    else:
+        return {}, None
+    
+# Returns the scoreboard of the match
+def getMatchStats(id: str) -> object:
+    res = get(f'https://api.faceit.com/stats/v1/stats/matches/{id}')
+    return res[0] if len(res) > 0 else None

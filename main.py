@@ -61,9 +61,28 @@ def parse():
         lg.info(f"Match {match['id']} saved")
         time.sleep(10)
 
+def check():
+    lg.info("Checking matches...")
+    # Get matches that were not checked yet from database
+    unchecked_matches = db.filter('prediction_correct', None)
+    for i, match in enumerate(unchecked_matches):
+        start_time = time.time()
+        lg.info(f"[{i+1}/{len(unchecked_matches)}] Checking match {match['id']}")
+        match_with_result, winner = getMatchWinner(match['id'])
+        if winner:
+            match = {**match, **match_with_result}
+            if match['prediction'] == 'tie':
+                match['prediction_correct'] = getScoreDifference(match) < constants.TIE_SCORE_DIFFERENCE
+            else:
+                match['prediction_correct'] = match['prediction'] == winner
+        match['checking_time'] = round(time.time() - start_time, 2)
+        db.set_one(match['id'], match)
+        lg.info(f"[{i+1}/{len(unchecked_matches)}] Match {match['id']} saved to database")
+
 def main():
     while True:
         parse()
+        check()
     
 if __name__ == "__main__":
     main()

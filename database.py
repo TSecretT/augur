@@ -32,6 +32,16 @@ class Database:
         if key in data:
             return data[key]
 
+    def filter(self, key, value):
+        data = self.get()
+        matches = []
+        for match_id in data:
+            if (key in data[match_id]) and (data[match_id][key] == value):
+                matches.append(data[match_id])
+            elif key not in data[match_id] and value is None:
+                matches.append(data[match_id])
+        return matches
+
     def len(self) -> int:
         return len(self.get())
 

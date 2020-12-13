@@ -51,8 +51,13 @@ def predict(data: object, MAP:str) -> str:
             faction2_points+=1
     
     if faction1_points > faction2_points:
-        return "faction1", 
+        return "faction1"
     elif faction2_points > faction1_points:
         return "faction2"
     else:
         return "tie"
+
+# Returns the integer difference of final match score; requires 'score' key
+def getScoreDifference(match: object) -> int:
+    score = [int(score.strip()) for score in match['score'].split('/')]
+    return abs(score[0] - score[1])
