@@ -49,7 +49,7 @@ def getMatches(limit=100, region="EU", offset=0, hub=False, hub_id=None, page=0)
 def getLiveMatches() -> list:
     live_matches = []
     offset = 0
-    while offset < 200:
+    while offset < 1000:
         matches = getMatches(offset=offset)
         if not matches: return live_matches
         for match in matches:
@@ -70,7 +70,6 @@ def getHubMatches(page_start=0, page=10):
 
 # Get match details
 def getMatchDetails(id: str) -> object:
-    print("Getting match details of ", id)
     return get(f"https://api.faceit.com/match/v2/match/{id}")['payload']
 
 # Returns list of match objects within time period 
