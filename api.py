@@ -3,6 +3,7 @@ import json
 import time
 from proxy import *
 import constants
+from multiprocessing import Pool
 
 proxies = []
 
@@ -28,7 +29,7 @@ def get(url, data=None, params=None, proxies=None, headers=None, hit=1):
         time.sleep(hit * 60)
         return get(url, data=data, params=params, proxies=proxies, hit=hit+1)
 
-def getMatches(limit=100, region="EU", offset=0, hub=False, hub_id=None, page=0):
+def getMatches(offset=0, limit=100, region="EU", size=100, hub=False, hub_id=None, page=0, full=False):
     if(hub and hub_id):
         params={
             "id": hub_id,
@@ -44,23 +45,24 @@ def getMatches(limit=100, region="EU", offset=0, hub=False, hub_id=None, page=0)
             "limit": limit,
             "offset": offset,
             "region": region,
-            "state": constants.MATCHMAKING_STATES
+            "state": constants.MATCHMAKING_STATES,
+            "size": size
         }
         url = 'https://api.faceit.com/match/v1/matches/list'
-    return get(url, params=params)['payload']
+    return get(url, params=params)['payload'] if not full else get(url, params=params)
 
 # Returns the list of current live matches
 def getLiveMatches() -> list:
     live_matches = []
     offset = 0
-    while offset < 5000:
-        matches = getMatches(offset=offset)
-        if not matches: return live_matches
+    info = getMatches(full=True)
+    total_pages = list(range(0, (info['totalPages'] + 1) * 100, 100))
+    with Pool(8) as p:
+        result_matches = p.map(getMatches, total_pages)
+    for matches in result_matches:
         for match in matches:
             if match['state'] == "ONGOING":
                 live_matches.append(match)
-        offset+= 100
-        print(offset)
     return live_matches
 
 # Returns the list of hub PAST matches

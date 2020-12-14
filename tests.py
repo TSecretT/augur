@@ -46,17 +46,3 @@ def scanMatch(match):
     return match
 
 if __name__ == '__main__':
-    n = 100
-    start_time = time.time()
-    matches = db.get(as_list=True)[:n]
-    matches = [match['id'] for match in matches]
-    with Pool(8) as p:
-        matches = p.map(api.getMatchDetails, matches)
-    
-    with Pool(8) as p:
-        matches = p.map(scanMatch, matches)
-    time_took = round(time.time() - start_time, 2)
-    print(f"Finished scan of {n} matches in {time_took} [{round(time_took / n, 2)} s/match]")
-
-    parsing_time = [match['parsing_time'] for match in matches]
-    print(utils.average(parsing_time))
