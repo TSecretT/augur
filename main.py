@@ -8,7 +8,7 @@ from api import *
 from proxy import *
 import logging as lg
 from multiprocessing import Pool
-from pymongo import BulkWriteError
+import pymongo
 
 lg.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lg.INFO)
 
@@ -71,7 +71,7 @@ def parse():
         matches = [match for match in matches if match['id'] not in saved_matches]
         try:
             db.insert_many(matches)
-        except BulkWriteError:
+        except pymongo.errors.BulkWriteError:
             pass
     time_took = round(time.time() - start_time, 2)
     print(f"Finished scan of {len(live_matches)} matches in {time_took}, saved in {round(time.time() - db_start_time, 2)} [{round(time_took / len(live_matches), 2)} s/match]")
@@ -102,6 +102,7 @@ def databaza():
 def main():
     while True:
         parse()
+        
         # check()
     
 if __name__ == "__main__":
