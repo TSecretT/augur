@@ -5,28 +5,28 @@ from proxy import *
 import constants
 from multiprocessing import Pool
 
-proxies = []
+saved_proxies = []
 
 def get(url, data=None, params=None, proxies=None, headers=None, hit=1):
+    global saved_proxies
     try:
         res = requests.get(url, params=params, proxies=proxies, headers=headers)
         if res.status_code == 200:
+            if proxies: print("Worked with proxy")
             return res.json()
         elif res.status_code == 429:
-            print("Going too fast, switching proxy")
-            removeProxy(proxies)
-            proxy = getProxy(proxies)
-            print(f"Switched to {proxy['https']}")
-    #         print("Going too fase, sleeping for", hit * 5)
-    #         time.sleep(hit * 5)
-            return get(url, data=data, params=params, proxies=proxies, hit=hit+1)
+            raise requests.exceptions.ConnectionError
         elif res.status_code == 500:
             print(500, res.json())
         else:
             print(res.status_code)
     except requests.exceptions.ConnectionError:
-        print("Max tries reached, sleeping for ", hit * 60)
-        time.sleep(hit * 60)
+        # print("Going too fast, switching proxy")
+        # if proxies: removeProxy(saved_proxies, proxies)
+        # proxies = getProxy(saved_proxies)
+        # print(f"Switched to {proxies['https']}")
+        print("Going too fast, sleeping for ", 10 * hit)
+        time.sleep(10 * hit)
         return get(url, data=data, params=params, proxies=proxies, hit=hit+1)
 
 def getMatches(offset=0, limit=100, region="EU", size=100, hub=False, hub_id=None, page=0, full=False):
