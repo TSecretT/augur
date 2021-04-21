@@ -65,13 +65,17 @@ def check():
     matches = db.find({'prediction_correct': None})
     matches = [match for match in matches]
     for offset in list(range( config.MATCH_CHECK_OFFSET, len(matches) + config.MATCH_CHECK_OFFSET, config.MATCH_CHECK_OFFSET )):
+        print("Parsing offset", offset)
         offset_time_start = time.time()
-        with Pool(8) as p:
-            checked_matches = p.map(checkMatch, matches[offset - config.MATCH_CHECK_OFFSET : offset])
-        for match in checked_matches:
-            db.replace_one({"_id": match['id']}, {**match}, True)
-        duration = round(time.time() - offset_time_start, 2)
-        print(f"Finished offset {offset} in {duration} [{round(duration / config.MATCH_CHECK_OFFSET, 2)}]")
+        try:
+            with Pool(8) as p:
+                checked_matches = p.map(checkMatch, matches[offset - config.MATCH_CHECK_OFFSET : offset])
+            for match in checked_matches:
+                db.replace_one({"_id": match['id']}, {**match}, True)
+            duration = round(time.time() - offset_time_start, 2)
+            print(f"Finished offset {offset} in {duration} [{round(duration / config.MATCH_CHECK_OFFSET, 2)}]")
+        except:
+            pass
 
 def statistics():
     matches = db.find({"prediction_correct": {"$exists": True}})
@@ -89,4 +93,4 @@ def statistics():
     print(f"Total matches: {len(matches)}\nPrediction rate: {round(correct_predictions / len(matches), 2)*100}\nAvg. parsing time: {average_parsing_time}\nAvg.checking time:{average_checking_time}")
 
 if __name__ == '__main__':
-    statistics()
+    check()
