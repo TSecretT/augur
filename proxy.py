@@ -1,7 +1,7 @@
 import base64
 import random
-from bs4 import BeautifulSoup
 import requests
+# from bs4 import BeautifulSoup
 
 def getProxyList():
     soup = BeautifulSoup(requests.get('http://free-proxy.cz/en/proxylist/country/all/https/ping/level1').content, "lxml")
