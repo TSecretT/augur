@@ -17,8 +17,14 @@ def filterMatchesByMap(matches: list, map_name: str) -> list:
 def average(array: list) -> list:
     return round(sum(array) / len(array), 2) if len(array) > 0 else 0
 
-# Returns list or object of players
 def getPlayersFromMatch(match: object, merge=False) -> list:
+    """
+    Returns list or object of players as \n
+    {
+        "faction1": [id, id...],
+        "faction2": [id, id...]
+    }
+    """
     data = {}
     players = []
     for faction in match['teams']:
@@ -62,8 +68,8 @@ def getScoreDifference(match: object) -> int:
     score = [int(score.strip()) for score in match['score'].split('/')]
     return abs(score[0] - score[1])
 
-# Clean match data
 def stripMatch(match: object) -> object:
+    """Remove unused keys from match object"""
     for key in match.copy():
         if key in constants.KEYS_TO_KEEP:
             if key == 'teams' and 'id' in match[key]['faction1']:
@@ -74,3 +80,19 @@ def stripMatch(match: object) -> object:
         else:
             del match[key]
     return match
+
+def stripPlayerMatch(match: object) -> object:
+    """Removes unused keys in player match object"""
+    matchCopy = match.copy()
+    for key in match:
+        if key not in constants.AVERAGE_ALLOWED:
+            del matchCopy[key]
+    return matchCopy
+
+def stripManually(obj: object, allowed_keys: list) -> object:
+    """Removes unused keys in given object"""
+    objCopy = obj.copy()
+    for key in obj:
+        if key not in allowed_keys:
+            del objCopy[key]
+    return objCopy
