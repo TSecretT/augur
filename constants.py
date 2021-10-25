@@ -10,17 +10,7 @@ MATCHMAKING_STATES = [
     "ABORTED"
 ]
 
-maps = [
-    'de_cache',
-    'de_dust2',
-    'de_mirage',
-    'de_nuke',
-    'de_overpass',
-    'de_inferno',
-    'de_vertigo',
-    'de_train',
-    'de_ancient'
-]
+maps = ['de_dust2', 'de_inferno', 'de_mirage', 'de_overpass', 'de_train']
 
 FaceitIndex = {
    "c2":"K/D Ratio",
@@ -110,5 +100,5 @@ KEYS_TO_KEEP = [
 ]
 
 DEFAULT_FROM = "1970-01-01T01:00:00+0000"
-DEFAULT_TO = "2020-12-11T21:20:28+0000"
+DEFAULT_TO = "2025-12-11T21:20:28+0000"
 TIE_SCORE_DIFFERENCE = 4
