@@ -1,3 +1,5 @@
+![](https://raw.githubusercontent.com/TSecretT/faugur/master/media/FAUGUR.png)
+
 <div align="center">
 
 # Faugur
