@@ -131,3 +131,4 @@ db.json
 .ipynb_checkpoints/
 .DS_Store
 .DS_Store
+.players.csv
