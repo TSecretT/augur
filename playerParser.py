@@ -6,7 +6,7 @@ import constants
 faceit = Faceit()
 
 def saveCSV(data):
-    with open('players.csv', 'a', newline='')  as output_file:
+    with open('players.csv', 'a', newline='', encoding='utf-8')  as output_file:
         dict_writer = csv.DictWriter(output_file, data[0].keys(), extrasaction='ignore')
         # dict_writer.writeheader()
         dict_writer.writerows(data)
@@ -89,7 +89,6 @@ def main():
                 for key in utils.stripManually(segment[mapname], mapsWhitelist):
                     playerData[mapname + "_" + key] = float(segment[mapname][key])
 
-            
             playersData.append(playerData)
 
         if len(playersData): saveCSV(playersData)
